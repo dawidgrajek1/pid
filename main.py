@@ -440,6 +440,45 @@ def run_simulation(
 ):
     """Run PCR simulation and generate results plot."""
     
+    # Validate all inputs are not None
+    required_params = {
+        'heat_capacity': heat_capacity,
+        'heating_power': heating_power,
+        'cooling_power': cooling_power,
+        'heat_loss': heat_loss,
+        'ambient_temp': ambient_temp,
+        'pid_kp': pid_kp,
+        'pid_ti': pid_ti,
+        'pid_td': pid_td,
+        'sample_volume': sample_volume,
+        'sample_density': sample_density,
+        'sample_specific_heat': sample_specific_heat,
+        'initial_temp': initial_temp,
+        'initial_duration': initial_duration,
+        'denat_temp': denat_temp,
+        'denat_duration': denat_duration,
+        'anneal_temp': anneal_temp,
+        'anneal_duration': anneal_duration,
+        'extension_temp': extension_temp,
+        'extension_duration': extension_duration,
+        'num_cycles': num_cycles,
+        'final_temp': final_temp,
+        'final_duration': final_duration,
+    }
+    
+    # Check for None values
+    missing = [name for name, value in required_params.items() if value is None]
+    if missing:
+        # Return empty figure with error message
+        fig = go.Figure()
+        fig.add_annotation(
+            text=f"Error: Missing values for: {', '.join(missing)}",
+            xref="paper", yref="paper",
+            x=0.5, y=0.5, showarrow=False,
+            font=dict(size=16, color="red")
+        )
+        return fig
+    
     # Create thermal model
     thermal_model = ThermalModel(
         heat_capacity=heat_capacity,

@@ -4,10 +4,10 @@ Default configuration values for PCR thermocycler simulation.
 
 # Thermal System Parameters
 THERMAL_HEAT_CAPACITY = 500  # J/K - Combined heat capacity of PCR block and samples
-HEATING_POWER = 250  # W - Maximum heating power
-COOLING_POWER = 150  # W - Maximum cooling power (negative in simulation)
+HEATING_POWER = 500  # W - Maximum heating power
+COOLING_POWER = 500  # W - Maximum cooling power (negative in simulation)
 HEAT_LOSS_COEF = 1.5  # W/K - Heat loss coefficient to ambient
-AMBIENT_TEMP = 22  # °C - Ambient temperature
+AMBIENT_TEMP = 25  # °C - Ambient temperature
 
 # Sample Properties
 SAMPLE_VOLUME = 1.8e-6  # m³ - 1.8 mL total sample volume
@@ -15,9 +15,9 @@ SAMPLE_DENSITY = 1000  # kg/m³ - Water-based PCR mix
 SAMPLE_SPECIFIC_HEAT = 4100  # J/(kg·K) - Specific heat capacity of aqueous solution
 
 # PID Controller Parameters (Standard Form)
-PID_KP = 80  # Proportional gain
-PID_TI = 1.0  # seconds - Integration time
-PID_TD = 20  # seconds - Derivative time
+PID_KP = 92  # Proportional gain
+PID_TI = 4.1  # seconds - Integration time
+PID_TD = 14  # seconds - Derivative time
 
 # Standard PCR Protocol
 # Stage format: (temperature °C, duration seconds)
