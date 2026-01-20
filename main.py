@@ -8,6 +8,7 @@ from dash import dcc, html, Input, Output, State
 import dash_bootstrap_components as dbc
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+from fuzzy_controller import FuzzyController
 
 from thermal_model import ThermalModel
 from pid_controller import PIDController
@@ -98,6 +99,29 @@ app.layout = dbc.Container([
                 ]),
             ], className="mb-3"),
         ], md=4),
+
+        # Controller Selection
+        dbc.Col([
+            dbc.Card([
+                dbc.CardHeader(html.H5("Controller Type")),
+                dbc.CardBody([
+                    dbc.RadioItems(
+                        id="controller-type",
+                        options=[
+                            {"label": "PID Controller", "value": "PID"},
+                            {"label": "Fuzzy Controller", "value": "FUZZY"},
+                        ],
+                        value="PID",
+                        inline=False,
+                    ),
+                    html.Small(
+                        "Select control algorithm",
+                        className="text-muted d-block mt-2"
+                    ),
+                ]),
+            ], className="mb-3"),
+        ], md=4),
+
         
         # PID Parameters
         dbc.Col([
@@ -389,6 +413,7 @@ app.layout = dbc.Container([
 @app.callback(
     Output("results-graph", "figure"),
     Input("run-button", "n_clicks"),
+    State("controller-type", "value"),
     State("heat-capacity", "value"),
     State("heating-power", "value"),
     State("cooling-power", "value"),
@@ -415,6 +440,7 @@ app.layout = dbc.Container([
 )
 def run_simulation(
     n_clicks,
+    controller_type,
     heat_capacity,
     heating_power,
     cooling_power,
@@ -492,17 +518,24 @@ def run_simulation(
         initial_temp=ambient_temp,
     )
     
-    # Create PID controller
-    pid_controller = PIDController(
-        kp=pid_kp,
-        ti=pid_ti,
-        td=pid_td,
-        output_min=-cooling_power,
-        output_max=heating_power,
-    )
+    # Create controller
+    if controller_type == "PID":    # PID
+        controller = PIDController(
+            kp=pid_kp,
+            ti=pid_ti,
+            td=pid_td,
+            output_min=-cooling_power,
+            output_max=heating_power,
+        )
+    else:  # FUZZY
+        controller = FuzzyController(
+            output_min=-cooling_power,
+            output_max=heating_power,
+        )
+
     
     # Create simulator
-    simulator = PCRSimulator(thermal_model, pid_controller)
+    simulator = PCRSimulator(thermal_model, controller)
     
     # Run simulation
     results = simulator.simulate(
