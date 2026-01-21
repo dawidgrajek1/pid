@@ -49,29 +49,29 @@ class FuzzyController:
     # define fuzzify intervals (like P in PID)
     def fuzzify_error(self, e):
         return {
-            "NB": self.trapmf(e, -60, -60, -40, -20),
-            "NS": self.trapmf(e, -40, -20, -10, 0),
+            "NB": self.trapmf(e, -100, -100, -60, -40),
+            "NS": self.trapmf(e, -60, -30, -15, 0),
             "Z":  self.trapmf(e, -10, -2, 2, 10),
-            "PS": self.trapmf(e, 0, 10, 20, 40),
-            "PB": self.trapmf(e, 20, 40, 60, 60),
+            "PS": self.trapmf(e, 0, 15, 30, 60),
+            "PB": self.trapmf(e, 40, 60, 100, 100),
         }
 
     # fuzzify direction of changes (like D in PID)
     def fuzzify_ce(self, ce):
         return {
-            "N": self.trapmf(ce, -5, -5, -2, 0),
-            "Z": self.trapmf(ce, -1, -0.2, 0.2, 1),
-            "P": self.trapmf(ce, 0, 2, 5, 5),
+            "N": self.trapmf(ce, -100, -80, -40, 0),
+            "Z": self.trapmf(ce, -10, -1, 1, 10),
+            "P": self.trapmf(ce, 0, 40, 80, 100),
         }
 
     # output values
     def output_sets(self, u):
         return {
-            "NB": self.trapmf(u, -1.0, -1.0, -0.7, -0.4),
-            "NS": self.trapmf(u, -0.7, -0.4, -0.2, 0.0),
-            "Z":  self.trapmf(u, -0.1, -0.02, 0.02, 0.1),
-            "PS": self.trapmf(u, 0.0, 0.2, 0.4, 0.7),
-            "PB": self.trapmf(u, 0.4, 0.7, 1.0, 1.0),
+            "NB": self.trapmf(u, -1.0, -1.0, -0.8, -0.5),
+            "NS": self.trapmf(u, -0.8, -0.5, -0.2, 0.0),
+            "Z":  self.trapmf(u, -0.11, -0.01, 0.01, 0.11),
+            "PS": self.trapmf(u, 0.0, 0.2, 0.5, 0.8),
+            "PB": self.trapmf(u, 0.5, 0.8, 1.0, 1.0),
         }
 
     # rules of controller (if fuzzify_error is "PB" and fuzzify_ce is "P" take output values from "PB")
@@ -143,5 +143,4 @@ class FuzzyController:
 
         self.prev_error = error
         return u
-
 
