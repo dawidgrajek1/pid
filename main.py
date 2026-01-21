@@ -564,12 +564,21 @@ def run_simulation(
         final_duration=final_duration,
     )
 
+    # Calculate cumulative energy for PID and Fuzzy controllers
+    pid_energy = [0]
+    fuzzy_energy = [0]
+
+    for i in range(1, len(pid_results['time'])):
+        dt = pid_results['time'][i] - pid_results['time'][i - 1]
+        pid_energy.append(pid_energy[-1] + pid_results['control'][i] * dt)
+        fuzzy_energy.append(fuzzy_energy[-1] + fuzzy_results['control'][i] * dt)
+
     # Create subplots
     fig = make_subplots(
         rows=2, cols=1,
         subplot_titles=(
             "Temperature vs Time",
-            "Net Power vs Time"
+            "Net Energy over Time"
         ),
         vertical_spacing=0.12,
         horizontal_spacing=0.10,
@@ -606,14 +615,14 @@ def run_simulation(
         ),
         row=1, col=1
     )
-    
-    # Control output plot
+
+    # Cumulative energy plot
     fig.add_trace(
         go.Scatter(
             x=pid_results['time'],
-            y=pid_results['control'],
+            y=pid_energy,
             mode='lines',
-            name='PID Net Power',
+            name='PID Net Energy',
             line=dict(color='green'),
         ),
         row=2, col=1
@@ -621,21 +630,21 @@ def run_simulation(
     fig.add_trace(
         go.Scatter(
             x=fuzzy_results['time'],
-            y=fuzzy_results['control'],
+            y=fuzzy_energy,
             mode='lines',
-            name='Fuzzy Net Power',
+            name='Fuzzy Net Energy',
             line=dict(color='blue'),
         ),
         row=2, col=1
     )
-    
+
     # Update axes labels
     fig.update_xaxes(title_text="Time (s)", row=1, col=1)
     fig.update_xaxes(title_text="Time (s)", row=2, col=1)
-    
+
     fig.update_yaxes(title_text="Temperature (°C)", row=1, col=1)
-    fig.update_yaxes(title_text="Power (W)", row=2, col=1)
-    
+    fig.update_yaxes(title_text="Energy (J)", row=2, col=1)
+
     # Update layout
     fig.update_layout(
         title_text="PCR Simulation Results",
