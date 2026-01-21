@@ -554,12 +554,10 @@ def run_simulation(
     
     # Create subplots
     fig = make_subplots(
-        rows=2, cols=2,
+        rows=2, cols=1,
         subplot_titles=(
             "Temperature vs Time",
-            "Control Output",
-            "Error Signal",
-            "PID Components"
+            "Net Power vs Time"
         ),
         vertical_spacing=0.12,
         horizontal_spacing=0.10,
@@ -593,68 +591,19 @@ def run_simulation(
             x=results['time'],
             y=results['control'],
             mode='lines',
-            name='Control Output',
+            name='Net Power',
             line=dict(color='green'),
-            showlegend=False,
-        ),
-        row=1, col=2
-    )
-    
-    # Error plot
-    fig.add_trace(
-        go.Scatter(
-            x=results['time'],
-            y=results['error'],
-            mode='lines',
-            name='Error',
-            line=dict(color='orange'),
             showlegend=False,
         ),
         row=2, col=1
     )
     
-    # PID components plot
-    fig.add_trace(
-        go.Scatter(
-            x=results['time'],
-            y=results['p_term'],
-            mode='lines',
-            name='P Term',
-            line=dict(color='red'),
-        ),
-        row=2, col=2
-    )
-    fig.add_trace(
-        go.Scatter(
-            x=results['time'],
-            y=results['i_term'],
-            mode='lines',
-            name='I Term',
-            line=dict(color='blue'),
-        ),
-        row=2, col=2
-    )
-    fig.add_trace(
-        go.Scatter(
-            x=results['time'],
-            y=results['d_term'],
-            mode='lines',
-            name='D Term',
-            line=dict(color='green'),
-        ),
-        row=2, col=2
-    )
-    
     # Update axes labels
     fig.update_xaxes(title_text="Time (s)", row=1, col=1)
-    fig.update_xaxes(title_text="Time (s)", row=1, col=2)
     fig.update_xaxes(title_text="Time (s)", row=2, col=1)
-    fig.update_xaxes(title_text="Time (s)", row=2, col=2)
     
     fig.update_yaxes(title_text="Temperature (°C)", row=1, col=1)
-    fig.update_yaxes(title_text="Power (W)", row=1, col=2)
-    fig.update_yaxes(title_text="Error (°C)", row=2, col=1)
-    fig.update_yaxes(title_text="Component Value", row=2, col=2)
+    fig.update_yaxes(title_text="Power (W)", row=2, col=1)
     
     # Update layout
     fig.update_layout(

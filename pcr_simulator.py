@@ -17,7 +17,7 @@ class PCRSimulator:
     
     Protocol structure:
     1. Initial denaturation
-    2. Cycling (denaturation -> annealing -> extension) × N cycles
+    2. Cycling (denaturation -> annealing -> extension) * N cycles
     3. Final extension
     4. Hold
     """
