@@ -26,12 +26,7 @@ app.layout = dbc.Container([
     # Header
     dbc.Row([
         dbc.Col([
-            html.H1("PCR Thermocycler Simulator", className="text-center mb-4 mt-4"),
-            html.P(
-                "Simulate a PCR thermocycler using an advanced thermal model and PID controller. "
-                "Configure all parameters and run instant simulations.",
-                className="text-center text-muted mb-4"
-            ),
+            html.H1("PCR Thermocycler Simulator", className="text-center mb-4 mt-4")
         ])
     ]),
     
@@ -98,72 +93,8 @@ app.layout = dbc.Container([
                     html.Small("Room temperature", className="text-muted d-block"),
                 ]),
             ], className="mb-3"),
-        ], md=4),
+        ], md=3),
 
-        # Controller Selection
-        dbc.Col([
-            dbc.Card([
-                dbc.CardHeader(html.H5("Controller Type")),
-                dbc.CardBody([
-                    dbc.RadioItems(
-                        id="controller-type",
-                        options=[
-                            {"label": "PID Controller", "value": "PID"},
-                            {"label": "Fuzzy Controller", "value": "FUZZY"},
-                        ],
-                        value="PID",
-                        inline=False,
-                    ),
-                    html.Small(
-                        "Select control algorithm",
-                        className="text-muted d-block mt-2"
-                    ),
-                ]),
-            ], className="mb-3"),
-        ], md=4),
-
-        
-        # PID Parameters
-        dbc.Col([
-            dbc.Card([
-                dbc.CardHeader(html.H5("PID Controller")),
-                dbc.CardBody([
-                    dbc.Label("Proportional Gain (Kp)"),
-                    dbc.Input(
-                        id="pid-kp",
-                        type="number",
-                        value=config.PID_KP,
-                        min=config.PID_KP_MIN,
-                        max=config.PID_KP_MAX,
-                        step=1,
-                    ),
-                    html.Small("Proportional gain (typical: 50-150)", className="text-muted d-block mb-2"),
-                    
-                    dbc.Label("Integration Time Ti (s)", className="mt-3"),
-                    dbc.Input(
-                        id="pid-ti",
-                        type="number",
-                        value=config.PID_TI,
-                        min=config.PID_TI_MIN,
-                        max=config.PID_TI_MAX,
-                        step=0.1,
-                    ),
-                    html.Small("Integration time constant (typical: 0.5-5)", className="text-muted d-block mb-2"),
-                    
-                    dbc.Label("Derivative Time Td (s)", className="mt-3"),
-                    dbc.Input(
-                        id="pid-td",
-                        type="number",
-                        value=config.PID_TD,
-                        min=config.PID_TD_MIN,
-                        max=config.PID_TD_MAX,
-                        step=1,
-                    ),
-                    html.Small("Derivative time constant (typical: 10-50)", className="text-muted d-block"),
-                ]),
-            ], className="mb-3"),
-        ], md=4),
-        
         # Sample Properties
         dbc.Col([
             dbc.Card([
@@ -205,9 +136,83 @@ app.layout = dbc.Container([
                     html.Small("Typically ~4100 for water-based PCR mix", className="text-muted d-block"),
                 ]),
             ], className="mb-3"),
-        ], md=4),
+        ], md=3),
+
+        # PID Parameters
+        dbc.Col([
+            dbc.Card([
+                dbc.CardHeader(html.H5("PID Controller")),
+                dbc.CardBody([
+                    dbc.Label("Proportional Gain (Kp)"),
+                    dbc.Input(
+                        id="pid-kp",
+                        type="number",
+                        value=config.PID_KP,
+                        min=config.PID_KP_MIN,
+                        max=config.PID_KP_MAX,
+                        step=1,
+                    ),
+                    html.Small("Proportional gain (typical: 50-150)", className="text-muted d-block mb-2"),
+                    
+                    dbc.Label("Integration Time Ti (s)", className="mt-3"),
+                    dbc.Input(
+                        id="pid-ti",
+                        type="number",
+                        value=config.PID_TI,
+                        min=config.PID_TI_MIN,
+                        max=config.PID_TI_MAX,
+                        step=0.1,
+                    ),
+                    html.Small("Integration time constant (typical: 0.5-5)", className="text-muted d-block mb-2"),
+                    
+                    dbc.Label("Derivative Time Td (s)", className="mt-3"),
+                    dbc.Input(
+                        id="pid-td",
+                        type="number",
+                        value=config.PID_TD,
+                        min=config.PID_TD_MIN,
+                        max=config.PID_TD_MAX,
+                        step=1,
+                    ),
+                    html.Small("Derivative time constant (typical: 10-50)", className="text-muted d-block"),
+                ]),
+            ], className="mb-3"),
+        ], md=3),
+
+        # Add Fuzzy Controller Parameters
+        dbc.Col([
+            dbc.Col([
+                dbc.Card([
+                    dbc.CardHeader(html.H5("Fuzzy Controller (PD)")),
+                    dbc.CardBody([
+                        dbc.Label("Proportional Gain (Kp)"),
+                        dbc.Input(
+                            id="fuzzy-param-1",
+                            type="number",
+                            value=0.5,  # Default value
+                            min=0,
+                            max=1,
+                            step=0.1,
+                        ),
+                        html.Small("Proportional gain (typical: 50-150)", className="text-muted d-block mb-2"),
+
+                        dbc.Label("Derivative Time Td (s)"),
+                        dbc.Input(
+                            id="fuzzy-param-2",
+                            type="number",
+                            value=1.0,  # Default value
+                            min=0,
+                            max=2,
+                            step=0.1,
+                        ),
+                        html.Small("Derivative time constant (typical: 10-50)", className="text-muted d-block mb-2"),
+                    ]),
+                ], className="mb-3"),
+            ], md=12),
+        ], md=3),
     ]),
     
+
     # PCR Protocol Card
     dbc.Row([
         dbc.Col([
@@ -395,17 +400,6 @@ app.layout = dbc.Container([
         ]),
     ]),
     
-    # Footer
-    dbc.Row([
-        dbc.Col([
-            html.Hr(),
-            html.P(
-                "PCR Thermocycler Simulator with Advanced Thermal Model and PID Control",
-                className="text-center text-muted mb-4"
-            ),
-        ]),
-    ]),
-    
 ], fluid=True)
 
 
@@ -413,7 +407,6 @@ app.layout = dbc.Container([
 @app.callback(
     Output("results-graph", "figure"),
     Input("run-button", "n_clicks"),
-    State("controller-type", "value"),
     State("heat-capacity", "value"),
     State("heating-power", "value"),
     State("cooling-power", "value"),
@@ -422,6 +415,8 @@ app.layout = dbc.Container([
     State("pid-kp", "value"),
     State("pid-ti", "value"),
     State("pid-td", "value"),
+    State("fuzzy-param-1", "value"),
+    State("fuzzy-param-2", "value"),
     State("sample-volume", "value"),
     State("sample-density", "value"),
     State("sample-specific-heat", "value"),
@@ -440,7 +435,6 @@ app.layout = dbc.Container([
 )
 def run_simulation(
     n_clicks,
-    controller_type,
     heat_capacity,
     heating_power,
     cooling_power,
@@ -449,6 +443,8 @@ def run_simulation(
     pid_kp,
     pid_ti,
     pid_td,
+    fuzzy_param_1,
+    fuzzy_param_2,
     sample_volume,
     sample_density,
     sample_specific_heat,
@@ -476,6 +472,8 @@ def run_simulation(
         'pid_kp': pid_kp,
         'pid_ti': pid_ti,
         'pid_td': pid_td,
+        'fuzzy_param_1': fuzzy_param_1,
+        'fuzzy_param_2': fuzzy_param_2,
         'sample_volume': sample_volume,
         'sample_density': sample_density,
         'sample_specific_heat': sample_specific_heat,
@@ -518,27 +516,27 @@ def run_simulation(
         initial_temp=ambient_temp,
     )
     
-    # Create controller
-    if controller_type == "PID":    # PID
-        controller = PIDController(
-            kp=pid_kp,
-            ti=pid_ti,
-            td=pid_td,
-            output_min=-cooling_power,
-            output_max=heating_power,
-        )
-    else:  # FUZZY
-        controller = FuzzyController(
-            output_min=-cooling_power,
-            output_max=heating_power,
-        )
+    # Create controllers
+    pid_controller = PIDController(
+        kp=pid_kp,
+        ti=pid_ti,
+        td=pid_td,
+        output_min=-cooling_power,
+        output_max=heating_power,
+    )
 
-    
-    # Create simulator
-    simulator = PCRSimulator(thermal_model, controller)
-    
-    # Run simulation
-    results = simulator.simulate(
+    fuzzy_controller = FuzzyController(
+        param1=fuzzy_param_1,
+        param2=fuzzy_param_2,
+        output_min=-cooling_power,
+        output_max=heating_power,
+    )
+
+    # Run simulations for both controllers
+    pid_simulator = PCRSimulator(thermal_model, pid_controller)
+    fuzzy_simulator = PCRSimulator(thermal_model, fuzzy_controller)
+
+    pid_results = pid_simulator.simulate(
         initial_temp=initial_temp,
         initial_duration=initial_duration,
         denat_temp=denat_temp,
@@ -551,7 +549,21 @@ def run_simulation(
         final_temp=final_temp,
         final_duration=final_duration,
     )
-    
+
+    fuzzy_results = fuzzy_simulator.simulate(
+        initial_temp=initial_temp,
+        initial_duration=initial_duration,
+        denat_temp=denat_temp,
+        denat_duration=denat_duration,
+        anneal_temp=anneal_temp,
+        anneal_duration=anneal_duration,
+        extension_temp=extension_temp,
+        extension_duration=extension_duration,
+        num_cycles=num_cycles,
+        final_temp=final_temp,
+        final_duration=final_duration,
+    )
+
     # Create subplots
     fig = make_subplots(
         rows=2, cols=1,
@@ -566,21 +578,31 @@ def run_simulation(
     # Temperature plot
     fig.add_trace(
         go.Scatter(
-            x=results['time'],
-            y=results['setpoint'],
+            x=pid_results['time'],
+            y=pid_results['temperature'],
             mode='lines',
-            name='Setpoint',
-            line=dict(color='red', dash='dash'),
+            name='PID Temperature',
+            line=dict(color='green'),
         ),
         row=1, col=1
     )
     fig.add_trace(
         go.Scatter(
-            x=results['time'],
-            y=results['temperature'],
+            x=fuzzy_results['time'],
+            y=fuzzy_results['temperature'],
             mode='lines',
-            name='Actual Temperature',
+            name='Fuzzy Temperature',
             line=dict(color='blue'),
+        ),
+        row=1, col=1
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=pid_results['time'],
+            y=pid_results['setpoint'],
+            mode='lines',
+            name='Setpoint',
+            line=dict(color='red', dash='dash'),
         ),
         row=1, col=1
     )
@@ -588,12 +610,21 @@ def run_simulation(
     # Control output plot
     fig.add_trace(
         go.Scatter(
-            x=results['time'],
-            y=results['control'],
+            x=pid_results['time'],
+            y=pid_results['control'],
             mode='lines',
-            name='Net Power',
+            name='PID Net Power',
             line=dict(color='green'),
-            showlegend=False,
+        ),
+        row=2, col=1
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=fuzzy_results['time'],
+            y=fuzzy_results['control'],
+            mode='lines',
+            name='Fuzzy Net Power',
+            line=dict(color='blue'),
         ),
         row=2, col=1
     )

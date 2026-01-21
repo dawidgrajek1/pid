@@ -18,6 +18,8 @@ class FuzzyController:
         universe_min: float = -1.0,
         universe_max: float = 1.0,
         universe_step: float = 0.01,
+        param1: float = 0.5,  # Default value for param1
+        param2: float = 1.0,  # Default value for param2
     ):
         self.output_min = output_min
         self.output_max = output_max
@@ -25,6 +27,10 @@ class FuzzyController:
         self.u_universe = np.arange(universe_min, universe_max, universe_step)
 
         self.prev_error = 0.0
+
+        # Initialize new parameters
+        self.param1 = param1
+        self.param2 = param2
 
     # reset internal state of fuzzy controller
     def reset(self):
