@@ -569,12 +569,12 @@ def run_simulation(
         rows=2, cols=1,
         subplot_titles=(
             "Temperature vs Time",
-            "Net Power vs Time"
+            "Power Balance over Time"
         ),
         vertical_spacing=0.12,
         horizontal_spacing=0.10,
     )
-    
+
     # Temperature plot
     fig.add_trace(
         go.Scatter(
@@ -606,14 +606,14 @@ def run_simulation(
         ),
         row=1, col=1
     )
-    
-    # Control output plot
+
+    # Power balance plot
     fig.add_trace(
         go.Scatter(
             x=pid_results['time'],
             y=pid_results['control'],
             mode='lines',
-            name='PID Net Power',
+            name='PID Power Balance',
             line=dict(color='green'),
         ),
         row=2, col=1
@@ -623,19 +623,19 @@ def run_simulation(
             x=fuzzy_results['time'],
             y=fuzzy_results['control'],
             mode='lines',
-            name='Fuzzy Net Power',
+            name='Fuzzy Power Balance',
             line=dict(color='blue'),
         ),
         row=2, col=1
     )
-    
+
     # Update axes labels
     fig.update_xaxes(title_text="Time (s)", row=1, col=1)
     fig.update_xaxes(title_text="Time (s)", row=2, col=1)
-    
+
     fig.update_yaxes(title_text="Temperature (°C)", row=1, col=1)
     fig.update_yaxes(title_text="Power (W)", row=2, col=1)
-    
+
     # Update layout
     fig.update_layout(
         title_text="PCR Simulation Results",
